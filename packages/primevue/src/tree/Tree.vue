@@ -103,9 +103,9 @@ export default {
             }
         },
         filterValue(newValue, oldValue) {
-            if (newValue !== oldValue) {
-                if (this.autoExpandOnFilter) {
-                    for (let node of this.displayedNodes) {
+            if (this.autoExpandOnFilter && newValue !== oldValue) {
+                if (newValue?.length > 3) {
+                    for (let node of this.valueToRender) {
                         this.expandNode(node);
                     }
                     this.d_expandedKeys = { ...this.d_expandedKeys };
