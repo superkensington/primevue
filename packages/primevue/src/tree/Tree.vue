@@ -21,7 +21,7 @@
             <slot name="header" :value="value" :expandedKeys="expandedKeys" :selectionKeys="selectionKeys" />
             <ul v-if="!empty" :class="cx('rootChildren')" role="tree" :aria-labelledby="ariaLabelledby" :aria-label="ariaLabel" v-bind="ptm('rootChildren')">
                 <TreeNode
-                    v-for="(node, index) of displayedNodes"
+                    v-for="(node, index) of valueToRender"
                     :key="node.key"
                     :node="node"
                     :rootNodes="valueToRender"
@@ -104,7 +104,6 @@ export default {
         },
         filterValue(newValue, oldValue) {
             if (newValue !== oldValue) {
-                this.displayedNodes = this.getValueToRender();
                 if (this.autoExpandOnFilter) {
                     for (let node of this.displayedNodes) {
                         this.expandNode(node);
@@ -475,10 +474,6 @@ export default {
                 }
             }
         },
-        getValueToRender() {
-            if (this.filterValue && this.filterValue.trim().length > 0) return this.filteredValue;
-            else return this.value;
-        },
         expandNode(node) {
             if (node.children && node.children.length) {
                 this.d_expandedKeys[node.key] = true;
@@ -510,6 +505,10 @@ export default {
 
             return filteredNodes;
         },
+        valueToRender() {
+            if (this.filterValue && this.filterValue.trim().length > 0) return this.filteredValue;
+            else return this.value;
+        },
         empty() {
             return !this.valueToRender || this.valueToRender.length === 0;
         },
@@ -527,9 +526,6 @@ export default {
                 scrollable: this.scrollHeight === 'flex'
             });
         }
-    },
-    created() {
-        this.displayedNodes = this.getValueToRender();
     },
     components: {
         TreeNode,
